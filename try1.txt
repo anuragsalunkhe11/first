@@ -1,0 +1,300 @@
+mysql> SELECT BookID, BookName,
+    ->        Price,
+    ->        Price *.10 AS Tax
+    ->   FROM Book
+    -> ;
++--------+----------------------+---------+----------+
+| BookID | BookName             | Price   | Tax      |
++--------+----------------------+---------+----------+
+|      1 | MySQL for dummies    |  350.00 |  35.0000 |
+|      2 | MySQL for Developers |  560.00 |  56.0000 |
+|      3 | HTML5 Step by Step   |    NULL |     NULL |
+|      4 | Java Unleashed       | -560.00 | -56.0000 |
++--------+----------------------+---------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT BookID, BookName,
+    ->        Price
+    ->   FROM Book
+    ->   WHERE BookName = 'A';
+Empty set (0.00 sec)
+
+mysql> SELECT BookID, BookName,
+    ->        Price
+    ->   FROM Book
+    ->   WHERE BookName = 'Z';
+Empty set (0.00 sec)
+
+mysql> SELECT BookID, BookName,
+    ->        Price
+    ->   FROM Book
+    ->   WHERE BookName = 'M';
+Empty set (0.00 sec)
+
+mysql> SELECT BookID, BookName,
+    ->        Price
+    ->   FROM Book
+    ->   WHERE BookName LIKE 'M%';
++--------+----------------------+--------+
+| BookID | BookName             | Price  |
++--------+----------------------+--------+
+|      1 | MySQL for dummies    | 350.00 |
+|      2 | MySQL for Developers | 560.00 |
++--------+----------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from book;
++--------+----------------------+---------+
+| BookID | BookName             | Price   |
++--------+----------------------+---------+
+|      1 | MySQL for dummies    |  350.00 |
+|      2 | MySQL for Developers |  560.00 |
+|      3 | HTML5 Step by Step   |    NULL |
+|      4 | Java Unleashed       | -560.00 |
++--------+----------------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select bookid,bookname
+    -> from book
+    -> where bookid=2
+    -> or bookid=4;
++--------+----------------------+
+| bookid | bookname             |
++--------+----------------------+
+|      2 | MySQL for Developers |
+|      4 | Java Unleashed       |
++--------+----------------------+
+2 rows in set (0.00 sec)
+
+mysql> select bookid,bookname
+    -> from book
+    -> where bookid =1
+    -> and bookid=2;
+Empty set (0.00 sec)
+
+mysql> select * from book;
++--------+----------------------+---------+
+| BookID | BookName             | Price   |
++--------+----------------------+---------+
+|      1 | MySQL for dummies    |  350.00 |
+|      2 | MySQL for Developers |  560.00 |
+|      3 | HTML5 Step by Step   |    NULL |
+|      4 | Java Unleashed       | -560.00 |
++--------+----------------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select bookid,bookname
+    -> from book
+    -> where bookid IN (2,4);
++--------+----------------------+
+| bookid | bookname             |
++--------+----------------------+
+|      2 | MySQL for Developers |
+|      4 | Java Unleashed       |
++--------+----------------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT *
+    ->   FROM Book
+    ->   WHERE Price IS NULL;
++--------+--------------------+-------+
+| BookID | BookName           | Price |
++--------+--------------------+-------+
+|      3 | HTML5 Step by Step |  NULL |
++--------+--------------------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    ->   FROM Book
+    ->   WHERE Price BETWEEN 400 AND 600;
++--------+----------------------+--------+
+| BookID | BookName             | Price  |
++--------+----------------------+--------+
+|      2 | MySQL for Developers | 560.00 |
++--------+----------------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT *
+    ->   FROM INFORMATION_SCHEMA.Table_Constraints
+    ->   WHERE Table_Name = 'BookTran';
+Empty set (0.22 sec)
+
+mysql> describe book;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| BookID   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| BookName | varchar(50)  | NO   |     | NULL    |                |
+| Price    | decimal(6,2) | YES  |     | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+3 rows in set (0.11 sec)
+
+mysql> CREATE TABLE Location
+    -> (
+    ->   LocID int primary key,
+    ->   City varchar(10) not null,
+    ->   Addr varchar(20)
+    -> );
+Query OK, 0 rows affected (0.80 sec)
+
+mysql>
+mysql> INSERT INTO Location VALUES
+    -> (1, 'Mumbai', 'MBP'),
+    -> (2, 'Bangalore', 'ITPL'),
+    -> (3, 'Pune', 'Hinje Wadi'),
+    -> (4, 'Gurgaon', 'DLF 2');
+Query OK, 4 rows affected (0.17 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Location VALUES
+    -> (5, 'Hydrabad', 'Hitech City');
+Query OK, 1 row affected (0.13 sec)
+
+mysql> CREATE TABLE Dept
+    -> (DeptID int primary key,
+    ->  DName varchar(10) not null,
+    ->  LocID int references Location(LocID)
+    -> );
+Query OK, 0 rows affected (0.41 sec)
+
+mysql>
+mysql> INSERT INTO Dept VALUEs
+    -> (101, 'Sales', 1),
+    -> (102, 'HR', 3),
+    -> (103, 'Finance', 2),
+    -> (104, 'MKTG', 3),
+    -> (105, 'OPS', 4),
+    -> (106, 'IT', 4);
+Query OK, 6 rows affected (0.10 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Dept VALUES
+    -> (107, 'Trvl Desk', NULL);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> CREATE TABLE Emp
+    -> (EmpID int primary key,
+    ->  FName varchar(10) not null,
+    ->  LName varchar(10) not null,
+    ->  DeptID int references Dept(DeptID),
+    ->  MgrID int references Emp(EmpID),
+    ->  Salary decimal(10, 2)
+    -> );
+Query OK, 0 rows affected (0.37 sec)
+
+mysql>
+mysql> INSERT INTO Emp VALUES
+    -> (1001, 'Steven', 'King', 105, NULL, 50000),
+    -> (1003, 'Nancy', 'Greenberg', 102, 1001, 35000),
+    -> (1002, 'Neena', 'Kochhar', 105, 1003, 40000);
+Query OK, 3 rows affected (0.09 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> INSERT INTO Emp VALUES
+    -> (1004, 'Andrew', 'Lusk', 101, 1002, 15000);
+Query OK, 1 row affected (0.08 sec)
+
+mysql>
+mysql>
+mysql> INSERT INTO Emp VALUES
+    -> (1006, 'Andy', 'Hillman', 105, 1001, 30000);
+Query OK, 1 row affected (0.04 sec)
+
+mysql>
+mysql> INSERT INTO Emp VALUES
+    -> (1005, 'Pamela', 'Davis', NULL, 1002, 14000),
+    -> (1007, 'Rene', 'Lopez', 105, 1001, 18000),
+    -> (1009, 'Sue', 'Fisher', 105, 1001, 11000),
+    -> (1008, 'Tanya', 'Rff', 105, 1001, 10000);
+Query OK, 4 rows affected (0.08 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> select * from location;
++-------+-----------+-------------+
+| LocID | City      | Addr        |
++-------+-----------+-------------+
+|     1 | Mumbai    | MBP         |
+|     2 | Bangalore | ITPL        |
+|     3 | Pune      | Hinje Wadi  |
+|     4 | Gurgaon   | DLF 2       |
+|     5 | Hydrabad  | Hitech City |
++-------+-----------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from dept;
++--------+-----------+-------+
+| DeptID | DName     | LocID |
++--------+-----------+-------+
+|    101 | Sales     |     1 |
+|    102 | HR        |     3 |
+|    103 | Finance   |     2 |
+|    104 | MKTG      |     3 |
+|    105 | OPS       |     4 |
+|    106 | IT        |     4 |
+|    107 | Trvl Desk |  NULL |
++--------+-----------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select * from emp;
++-------+--------+-----------+--------+-------+----------+
+| EmpID | FName  | LName     | DeptID | MgrID | Salary   |
++-------+--------+-----------+--------+-------+----------+
+|  1001 | Steven | King      |    105 |  NULL | 50000.00 |
+|  1002 | Neena  | Kochhar   |    105 |  1003 | 40000.00 |
+|  1003 | Nancy  | Greenberg |    102 |  1001 | 35000.00 |
+|  1004 | Andrew | Lusk      |    101 |  1002 | 15000.00 |
+|  1005 | Pamela | Davis     |   NULL |  1002 | 14000.00 |
+|  1006 | Andy   | Hillman   |    105 |  1001 | 30000.00 |
+|  1007 | Rene   | Lopez     |    105 |  1001 | 18000.00 |
+|  1008 | Tanya  | Rff       |    105 |  1001 | 10000.00 |
+|  1009 | Sue    | Fisher    |    105 |  1001 | 11000.00 |
++-------+--------+-----------+--------+-------+----------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT DName, City, Addr
+    ->   FROM Dept INNER JOIN
+    ->        Location
+    ->     ON Dept.LocID = Location.LocID;
++---------+-----------+------------+
+| DName   | City      | Addr       |
++---------+-----------+------------+
+| Sales   | Mumbai    | MBP        |
+| HR      | Pune      | Hinje Wadi |
+| Finance | Bangalore | ITPL       |
+| MKTG    | Pune      | Hinje Wadi |
+| OPS     | Gurgaon   | DLF 2      |
+| IT      | Gurgaon   | DLF 2      |
++---------+-----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select dname,fname,city
+    -> from dept inner join location
+    -> on dept.locid = location.locid
+    -> inner join;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that
+corresponds to your MySQL server version for the right syntax to use near '' at
+line 4
+mysql> SELECT DName, FName, LName, City, Addr
+    ->   FROM Dept INNER JOIN Location
+    ->     ON Dept.LocID = Location.LocID
+    ->     INNER JOIN Emp
+    ->     ON Dept.DeptID = Emp.DeptID;
++-------+--------+-----------+---------+------------+
+| DName | FName  | LName     | City    | Addr       |
++-------+--------+-----------+---------+------------+
+| OPS   | Steven | King      | Gurgaon | DLF 2      |
+| OPS   | Neena  | Kochhar   | Gurgaon | DLF 2      |
+| HR    | Nancy  | Greenberg | Pune    | Hinje Wadi |
+| Sales | Andrew | Lusk      | Mumbai  | MBP        |
+| OPS   | Andy   | Hillman   | Gurgaon | DLF 2      |
+| OPS   | Rene   | Lopez     | Gurgaon | DLF 2      |
+| OPS   | Tanya  | Rff       | Gurgaon | DLF 2      |
+| OPS   | Sue    | Fisher    | Gurgaon | DLF 2      |
++-------+--------+-----------+---------+------------+
+8 rows in set (0.00 sec)
+
+mysql>
